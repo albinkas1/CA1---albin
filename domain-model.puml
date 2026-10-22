@@ -1,0 +1,119 @@
+@startuml
+!pragma layout elk
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 18
+skinparam shadowing false
+skinparam monochrome true
+skinparam roundcorner 0
+
+hide methods
+hide circle
+skinparam classAttributeIconSize 0
+skinparam nodesep 65
+skinparam ranksep 100
+skinparam linetype polyline
+class Owner {
+  name
+  contactDetails
+}
+class Property {
+  propertyReference
+  name
+  accessInstructions
+}
+class PropertySetup {
+  version
+  effectiveFrom
+  roomLayout
+  bedConfiguration
+  facilities
+  preferences
+  servicePackage
+  taskInstructions
+}
+class Stay {
+  stayReference
+  arrivalAt
+  departureAt
+  occupancy
+  timingConfirmation
+}
+class Turnaround {
+  turnaroundReference
+  cleaningState
+  checklistReviewState
+}
+class Task {
+  description
+  outcome
+  completedAt
+  receivedAt
+}
+class StaffMember {
+  name
+  roles
+  availability
+  transport
+  propertyExperience
+}
+class Assignment {
+  state
+  assignedAt
+  roleForTurnaround
+}
+class LinenStock {
+  linenType
+  location
+  quantityOnHand
+}
+class LinenRequirement {
+  linenType
+  requiredQuantity
+  occupancyAndBedBasis
+  quantityUsed
+}
+class LinenReservation {
+  quantity
+  state
+  reservedAt
+}
+class Inspection {
+  inspectedAt
+  receivedAt
+  findings
+}
+class Concern {
+  category
+  description
+  resolutionState
+  readinessImpact
+  reportedAt
+  receivedAt
+}
+class ReadinessAssessment {
+  assessedAt
+  evidenceAsOf
+  decision
+  reasons
+}
+Owner "1" -- "0..*" Property : is responsible for
+Property "1" -- "1..*" PropertySetup : has versions
+Property "1" -- "0..*" Stay : hosts
+Property "1" -- "0..*" Turnaround : has preparation work
+Stay "0..1" -- "0..1" Turnaround : precedes as departure
+Stay "0..1" -- "0..1" Turnaround : follows as arrival
+Turnaround "1" -- "0..*" Task : requires
+PropertySetup "1" -- "0..*" Task : provides basis for
+Turnaround "1" -- "0..*" Assignment : has
+StaffMember "1" -- "0..*" Assignment : takes
+Turnaround "1" -- "0..*" LinenRequirement : needs
+LinenRequirement "1" -- "0..*" LinenReservation : is supplied by
+LinenStock "1" -- "0..*" LinenReservation : supplies
+Turnaround "1" -- "0..*" Inspection : receives
+StaffMember "1" -- "0..*" Inspection : conducts
+Turnaround "1" -- "0..*" Concern : has open or resolved
+Inspection "0..1" -- "0..*" Concern : identifies
+Turnaround "1" -- "0..*" ReadinessAssessment : retains
+StaffMember "1" -- "0..*" ReadinessAssessment : records
+@enduml
